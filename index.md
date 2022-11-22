@@ -1,6 +1,6 @@
 # Yusuf's Progress Journal
 
-This is Yusuf's [Personal Progress Journal website](https://pjournal.github.io/boun01g-dol-r/). 
+This is Yusuf's [Personal Progress Journal website](https://yusufisik1.github.io). 
 
 
 ### Plotting Graphs in R 
