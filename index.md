@@ -1,6 +1,6 @@
-# Group Dol_R's Progress Journal
+# Yusuf's Progress Journal
 
-This is group Yusuf's [Personal Progress Journal website](https://pjournal.github.io/boun01g-dol-r/). 
+This is Yusuf's [Personal Progress Journal website](https://pjournal.github.io/boun01g-dol-r/). 
 
 
 ### Plotting Graphs in R 
