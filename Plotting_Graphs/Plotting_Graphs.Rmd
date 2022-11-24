@@ -1,0 +1,143 @@
+---
+title: "Plotting Graphs"
+subtitle: "Graphs in my MSc Thesis"
+author: "Yusuf Isik"
+date: "11/24/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Loading the Libraries and Datasets
+
+```{r, message=FALSE, results="hide"}
+
+library(ggplot2) # Plotting Library
+library(tidyverse) # 
+library(readxl) # Read data from .xlsx files
+library(lubridate) # 
+library(tidyr) #
+library(dplyr)
+
+```
+
+
+
+## 1. Neutrophil Level Graphs of Patients with Different Bacterial Infections 
+
+First, we import the data from an xlsx file and rename the bacteria types in "type" column.  
+
+```{r setup_data, results="hide"}
+One_shot_name1=read_excel('one_shot_ref.xlsx')
+One_shot_name1 <- data.frame(One_shot_name1)
+
+#Rename the bacteria types
+
+One_shot_name1$type[One_shot_name1$type == "G*"] <- "Pyelonephritis 2"
+One_shot_name1$type[One_shot_name1$type == "GX"] <- "Pyelonephritis 1"
+One_shot_name1$type[One_shot_name1$type == "GR"] <- "Peritonitis 2"
+One_shot_name1$type[One_shot_name1$type == "GU"] <- "Peritonitis 1"
+One_shot_name1$type[One_shot_name1$type == "GT"] <- "Peritonitis 3"
+One_shot_name1$type[One_shot_name1$type == "GO"] <- "Pneumonia"
+
+```
+
+In the first graph we used bacteria types to group the data. We use different colors for each bacteria type. We use line graph and point graph. The data represents the points of time(hour) and neutrophil ratio. 
+
+### a) Adjust color, point and size
+
+You can reach the hex code of any color from this link  <https://htmlcolorcodes.com/>
+
+```{r One_shot_name1}
+p_one_shot_allinclude0 <- ggplot(data=One_shot_name1, aes(x=hour, y=ANC, color=type,shape=type))+
+  geom_line()+
+  geom_point(size=1.6)+
+  labs(x="Hour",y="Neutrophil Ratio") +
+  ggtitle("Neutrophil Ratio of Patients with Different Bacterial Infections")+
+  #guides(linetype=F, shape=F, color=guide_legend(title="Bacteria Type")) 
+  labs(color="Bacteria Type", shape="Bacteria Type")+ theme_bw() + 
+  scale_color_manual(values = c("#646464","#649632","#966432", "#19a39b","#042fcf","#dc5000"))+theme(legend.position = "bottom")+
+  scale_size_manual(values=c(1,1,1,1,1.5,1))
+
+p_one_shot_allinclude0
+
+```
+
+
+### b) Adjust the line shapes 
+
+```{r shape_included}
+p_one_shot_allinclude <- ggplot(data=One_shot_name1, aes(x=hour, y=ANC, color=type,linetype=type,shape=type))+
+  geom_line()+
+  geom_point(size=1)+
+  labs(x="Hour",y="Neutrophil Ratio") +
+  ggtitle("Neutrophil Ratio of Patients with Different Bacterial Infections")+
+  #guides(linetype=F, shape=F, color=guide_legend(title="Bacteria Type")) 
+  labs(color="Bacteria Type", linetype="Bacteria Type", shape="Bacteria Type")+ theme_bw() + 
+  scale_color_manual(values = c(1,2,3,4,17,15))+theme(legend.position = "bottom")+
+  scale_size_manual(values=c(1,1,1,1,1.5,1))
+
+p_one_shot_allinclude
+
+```
+
+
+
+
+## 2. Neutorphil levels of Irradiated non-human primates and simulation results
+
+In this graph, we plot the simulation result and clinical data together. Sometimes, you may need to manually determine the axis limits. You can see how its done in the following code lines.  
+
+```{r primate_graph, message=F, warning=FALSE,}
+primate_data=read_excel('primate_data.xlsx')
+
+primate_data <- data.frame(primate_data)
+
+p_primate <- ggplot(data=primate_data, aes(x=Hour, y=nRatio, color="Clinical Data"))+
+  geom_line(show.legend = F,alpha=0.6)+
+  geom_point(size=1, show.legend = F, alpha=0.6)+
+  labs(x="Hour",y="Neutrophil Ratio")+
+  scale_x_continuous(expand = c(0, 0),limits = c(-2, 1440)) + 
+  scale_y_continuous(expand = c(0, 0), limits = c(-0.01,2.6))+
+  scale_color_manual(values = "#0064c8")+ theme_bw()
+
+radiation_sim=read_excel('radiation_sim_longer2.xlsx')#
+radiation_sim <- data.frame(radiation_sim)
+
+
+p_data_and_sim <- p_primate + geom_line(data=radiation_sim, aes(x=Hour, y=nRatio, color="Simulation Result"), show.legend = T)+
+  scale_x_continuous(expand = c(0, 0),limits = c(-2, 1440)) + 
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.01, 2.7)) +
+  # geom_point(size=1, show.legend = F)+
+  labs(x="Hour",y="Neutrophil Ratio")+
+  ggtitle("Neutrophil Ratio of non-Human Primates and Our Simulation Results ")+
+  scale_color_discrete(name="", labels=c("Simulation Data", "Clinical Data")) + theme_bw()+ 
+  scale_color_manual(name="", values=c( "#0064c8", "#c80000"))+
+  theme(legend.position = "bottom", legend.text=element_text(size=12)) # adjust text size in legend
+
+p_data_and_sim
+
+```
+
+
+<!-- ## R Markdown -->
+
+<!-- This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. -->
+
+<!-- When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this: -->
+
+<!-- ```{r cars} -->
+<!-- summary(cars) -->
+<!-- ``` -->
+
+<!-- ## Including Plots -->
+
+<!-- You can also embed plots, for example: -->
+
+<!-- ```{r pressure, echo=FALSE} -->
+<!-- plot(pressure) -->
+<!-- ``` -->
+
+<!-- Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. -->
